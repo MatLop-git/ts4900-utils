@@ -109,30 +109,27 @@ void do_info(int twifd)
 		printf("I2C Read failed with %d\n", ret);
 		return;
 	}
-    for (i = 0; i <= 15; i++)
-    	data[i] = (tmp[i*2] << 8) | tmp[(i*2)+1];
+	for (i = 0; i <= 15; i++)
+		data[i] = (tmp[i*2] << 8) | tmp[(i*2)+1];
 
-	if(strstr(model, "7970")) {
-		printf("VDD_ARM_CAP=%d\n", sscale(data[0]));
-		printf("VDD_HIGH_CAP=%d\n", sscale(data[1]));
-		printf("VDD_SOC_CAP=%d\n",sscale(data[2]));
-		printf("VDD_ARM=%d\n", sscale(data[3]));
-		printf("SILAB_P10_RAW=0x%X\n", data[4]);
-		printf("SILAB_P11_RAW=0x%X\n", data[5]);
-		printf("SILAB_P12_RAW=0x%X\n", data[6]);
-		printf("VIN=%d\n", rscale(data[7], 2870, 147));
-		printf("V5_A=%d\n", rscale(data[8], 147, 107));
-		printf("V3P1=%d\n", rscale(data[9], 499, 499));
-		printf("DDR_1P5V=%d\n", sscale(data[10]));
-		printf("V1P8=%d\n", sscale(data[11]));
-		printf("V1P2=%d\n", sscale(data[12]));
-		printf("RAM_VREF=%d\n", sscale(data[13]));
-		printf("V3P3=%d\n", rscale(data[14], 499, 499));
-		printf("SILABREV=%d\n", data[15]);
+	if(strstr(model, "TERUMO")) {
+		printf("VDD_HIGH_CAP=%d\n", sscale(data[0]));
+		printf("SILAB_P10_RAW=0x%X\n", data[1]);
+		printf("SILAB_P11_RAW=0x%X\n", data[2]);
+		printf("SILAB_P12_RAW=0x%X\n", data[3]);
+		printf("VIN=%d\n", rscale(data[4], 2870, 147));
+		printf("V5P3_A=%d\n", rscale(data[5], 200, 147));
+		printf("V3P1=%d\n", rscale(data[6], 499, 499));
+		printf("AN_SUP_CHRG=%d\n", rscale(data[7], 200, 147));
+		printf("V1P8=%d\n", sscale(data[8]));
+		printf("AN_SUP_CAP_2=%d\n", sscale(data[9]));
+		printf("RAM_VREF=%d\n", sscale(data[10]));
+		printf("AN_SUP_CAP_1=%d\n", sscale(data[11]));
+		printf("SUPERCAP_PCT=%d\n", (rscale(data[7], 200, 147)*100)/5000);
 
-		printf("SILAB_P10_UA=%d\n", cscale(data[4], 110));
-		printf("SILAB_P11_UA=%d\n", cscale(data[5], 110));
-		printf("SILAB_P12_UA=%d\n", cscale(data[6], 110));
+		printf("SILAB_P10_UA=%d\n", cscale(data[1], 110));
+		printf("SILAB_P11_UA=%d\n", cscale(data[2], 110));
+		printf("SILAB_P12_UA=%d\n", cscale(data[3], 110));
 	} else if(strstr(model, "7990")) {
 		printf("VIN=%d\n", rscale(data[0], 2870, 147));
 		printf("V5_A=%d\n", rscale(data[1], 147, 107));
@@ -181,7 +178,7 @@ int main(int argc, char **argv)
 	}
 
 	model = get_model();
-	if(strstr(model, "7970")) {
+	if(strstr(model, "7970") || strstr(model, "TERUMO")) {
 		slaveaddr = 0x10;
 	} else if (strstr(model, "7990")) {
 		slaveaddr = 0x4a;

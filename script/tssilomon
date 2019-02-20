@@ -42,6 +42,30 @@ if [ "$MODEL" = "TS-7990" ]; then
 		# This will block until there is an IRQ on POWER_FAIL
 		do gpioctl --waitfor 4
 	done	
+elif [ "$MODEL" = "TS-TERUMO" ]; then
+	RESET_PCT=90
+	echo 0 > /sys/class/gpio/export
+	echo in > /sys/class/gpio/gpio0/direction
+	echo rising > /sys/class/gpio/gpio0/edge
+
+	while true;
+		# while POWER_FAIL is high, check supercap levels
+		while eval $(gpioctl --getin 0); [ "$gpio0" -eq "1" ];
+			do eval $(tsmicroctl -i)
+			echo "Supercaps at $SUPERCAP_PCT"
+
+			if [ $SUPERCAP_PCT -le $RESET_PCT ]; then 
+				wall "The script tssilomon has detected main power has been lost!  Shutting down safely to prevent filesystem damage."
+				reboot
+				exit
+			else
+				sleep .5
+			fi
+		done
+		# This will block until there is an IRQ on POWER_FAIL
+		do gpioctl --waitfor 0
+	done	
+
 else
 	echo "Supercaps not supported on $MODEL"
 	exit 1
