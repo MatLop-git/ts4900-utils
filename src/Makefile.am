@@ -19,4 +19,7 @@ load_fpga_LDFLAGS = -mcpu=cortex-a9
 tsmicroctl_SOURCES = tsmicroctl.c
 tsmicroctl_CPPFLAGS = -DCTL
 
+mram_test_SOURCES = mram-test.c
+
 bin_PROGRAMS = tshwctl nvramctl gpioctl rtctemp adc8390 load_fpga tsmicroctl
+noinst_PROGRAMS = mram-test
