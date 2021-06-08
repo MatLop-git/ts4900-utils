@@ -1,0 +1,8 @@
+adc8390
+gpioctl
+load_fpga
+mram-test
+nvramctl
+rtctemp
+tshwctl
+tsmicroctl
